@@ -10,9 +10,9 @@ const listingSchema = new Schema ({
         required: true,
     },   
     description: String,
-    image: {
-        type: String,
-        set: (v) => v === "" ? "https://media.istockphoto.com/id/1740583164/photo/ocean-sunrise-over-the-tropical-sea-shore-and-exotic-island-beach.jpg?s=1024x1024&w=is&k=20&c=EbKvGRbF5v_fMvIv-m2rX3Q5WPCcm1lhes8ry2WIvvI=" : v,
+     image: {
+        url: String,
+        filename: String,
     },
     price: String,
     location: String,
@@ -22,7 +22,22 @@ const listingSchema = new Schema ({
         type: Schema.Types.ObjectId,
         ref: "Review",
         }
-    ]
+    ],
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
+    geometry: {
+       type: {
+            type: String, // Don't do `{ location: { type: String } }`
+            enum: ['Point'], // 'location.type' must be 'Point'
+            required: true
+          },
+          coordinates: {
+            type: [Number],
+            required: true
+          }
+        }
 });
 listingSchema.post("findOneAndDelete", async(listing) => {
     if(listing) {
